@@ -90,34 +90,42 @@ class TetrisWidgetState extends State<TetrisHome> {
       ),
       home: Scaffold(
           body: Center(
-              child:  ConstrainedBox(
-                constraints: BoxConstraints.tightFor(),
-                child: new Stack(
-                  overflow:Overflow.clip,
-                  children: <Widget>[
-                    SizedBox(
-                      width: width,
-                      height: height,
-                      child: GameWidget(
-                        game: MyGameSubClass(this),
+              child:  Container(
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: AssetImage("assets/images/bg.png"),
+                        fit: BoxFit.cover
+                    )
+                ),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints.tightFor(),
+                  child: new Stack(
+                    overflow:Overflow.clip,
+                    children: <Widget>[
+                      SizedBox(
+                        width: width,
+                        height: height,
+                        child: GameWidget(
+                          game: MyGameSubClass(this),
+                        ),
                       ),
-                    ),
-                    new Align(
-                      alignment: new FractionalOffset(1, 0),
-                      child: new Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            new IconButton(
-                              icon: new Icon(Icons.assignment_return),
-                              tooltip: '返回主页',
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                            ),
-                          ]
+                      new Align(
+                        alignment: new FractionalOffset(1, 0),
+                        child: new Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              new IconButton(
+                                icon: new Icon(Icons.assignment_return),
+                                tooltip: '返回主页',
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ]
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ))),
     );

@@ -60,6 +60,7 @@ flutter:
   assets:
     - assets/ui.json
     - assets/images/ui.png
+    - assets/images/bg.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

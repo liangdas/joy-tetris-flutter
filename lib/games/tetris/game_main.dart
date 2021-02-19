@@ -17,6 +17,7 @@ class MyGameSubClass extends BaseGame with TapDetector,PanDetector{
   Rect chessboard_rect = const Rect.fromLTWH(5, 5, 5, 5);
   Offset relativePoint;
   double mWidth=15; //方块宽度
+  double left=60,top=80; //画布距离屏幕顶部的边距
   MyGameSubClass(TetrisWidgetState tetrisHome){
     this.tetrisHome=tetrisHome;
     TexturepackerLoader.fromJSONAtlas('ui.png', 'ui.json')
@@ -65,16 +66,6 @@ class MyGameSubClass extends BaseGame with TapDetector,PanDetector{
   @override
   void render(Canvas canvas) {
     //设置画笔，画棋盘背景
-    var mPaint = Paint()
-      ..isAntiAlias = true //抗锯齿
-      ..style = PaintingStyle.fill //填充
-      ..color = Color(0x77cdb175); //背景为纸黄色
-    canvas.drawRect(
-        Rect.fromCenter(
-            center: Offset(size.x / 2, size.y / 2),
-            width: size.x,
-            height: size.y),
-        mPaint);
     if(tetrisHome.gameStatus!=null){
       if(tetrisHome.gameStatus.playerInfo!=null&&sprites!=null){
         tetrisHome.gameStatus.playerInfo.forEach((playerInfo) {
@@ -83,11 +74,11 @@ class MyGameSubClass extends BaseGame with TapDetector,PanDetector{
             var spr=sprites[sp];
             if(spr!=null){
               _textconfig.render(canvas, playerInfo.nickName+"("+playerInfo.score.toString()+")",
-                  Vector2(105, 50), anchor: Anchor.topCenter);
+                  Vector2(left+65, top), anchor: Anchor.topCenter);
               Paint paint = BasicPalette.white.paint;
               paint.color = new Color.fromARGB(255, 255, 255, 255);
-              sprites[sp].render(canvas, position: Vector2(40,
-                  50),
+              sprites[sp].render(canvas, position: Vector2(left,
+                  top),
                   size: Vector2.all(24),overridePaint: paint);
             }
           }else if(playerInfo.seatIndex==2){
@@ -96,11 +87,11 @@ class MyGameSubClass extends BaseGame with TapDetector,PanDetector{
             if(spr!=null){
               Paint paint = BasicPalette.white.paint;
               paint.color = new Color.fromARGB(255, 255, 255, 255);
-              sprites[sp].render(canvas, position: Vector2(size.x-60,
-                  50),
+              sprites[sp].render(canvas, position: Vector2(size.x-left,
+                  top),
                   size: Vector2.all(24),overridePaint: paint);
               _textconfig.render(canvas, playerInfo.nickName+"("+playerInfo.score.toString()+")",
-                  Vector2(size.x-105, 50), anchor: Anchor.topCenter);
+                  Vector2(size.x-left-65, top), anchor: Anchor.topCenter);
             }
           }
         });
@@ -114,29 +105,36 @@ class MyGameSubClass extends BaseGame with TapDetector,PanDetector{
       return;
     }
     S2C_GridBroadcast s2c=tetrisHome.gameData;
-    double chessboard_width=size.x-80;
+    double chessboard_width=size.x-left*2;
 
     //canvas.drawColor(CupertinoColors.systemGrey, BlendMode.colorBurn);//重绘下整个界面的画布背景颜色
     double mWidth = chessboard_rect.width / s2c.width.toInt();
     double mHeight = mWidth;
     this.mWidth=mWidth;
-    chessboard_rect = Rect.fromLTWH(40, 80, chessboard_width, mWidth*s2c.height.toInt());
+    chessboard_rect = Rect.fromLTWH(left, top+30, chessboard_width, mWidth*s2c.height.toInt());
+    var mPaint = Paint()
+      ..isAntiAlias = true //抗锯齿
+      ..style = PaintingStyle.fill //填充
+      ..color = Color(0xEEFFFFFF); //背景为纸黄色
+    canvas.drawRect(
+        chessboard_rect,
+        mPaint);
     //画棋盘网格
     mPaint
       ..style = PaintingStyle.stroke
-      ..color = CupertinoColors.systemGrey6
-      ..strokeWidth = 1.0;
-    //canvas.drawRect(chessboard_rect, mPaint);
-    for (var i = 0; i <= s2c.height.toInt(); i++) {
-      //画横线
-      canvas.drawLine(
-          Offset(chessboard_rect.left, chessboard_rect.top+mHeight * i), Offset(chessboard_rect.left+chessboard_rect.width, chessboard_rect.top+mHeight * i), mPaint);
-    }
-    for (var i = 0; i <= s2c.width.toInt(); i++) {
-      //画竖线
-      canvas.drawLine(
-          Offset(chessboard_rect.left+mWidth * i, chessboard_rect.top), Offset(chessboard_rect.left+mWidth * i, chessboard_rect.top+chessboard_rect.height), mPaint);
-    }
+      ..color = Colors.green[600]
+      ..strokeWidth = 4.0;
+    canvas.drawRect(chessboard_rect, mPaint);
+//    for (var i = 0; i <= s2c.height.toInt(); i++) {
+//      //画横线
+//      canvas.drawLine(
+//          Offset(chessboard_rect.left, chessboard_rect.top+mHeight * i), Offset(chessboard_rect.left+chessboard_rect.width, chessboard_rect.top+mHeight * i), mPaint);
+//    }
+//    for (var i = 0; i <= s2c.width.toInt(); i++) {
+//      //画竖线
+//      canvas.drawLine(
+//          Offset(chessboard_rect.left+mWidth * i, chessboard_rect.top), Offset(chessboard_rect.left+mWidth * i, chessboard_rect.top+chessboard_rect.height), mPaint);
+//    }
     s2c.map.forEach((Block b){
       var row=b.index.toInt()%s2c.width.toInt();
       var column=b.index.toInt()/s2c.width.toInt();
@@ -167,5 +165,5 @@ class MyGameSubClass extends BaseGame with TapDetector,PanDetector{
     // TODO: implement update
   }
 
-  Color backgroundColor() => const Color(0xFFFFFFFF);
+  Color backgroundColor() => const Color(0x00FFFFFF);
 }

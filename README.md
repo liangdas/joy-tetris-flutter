@@ -6,7 +6,10 @@
 
 flutter build web --release --dart-define=FLUTTER_WEB_USE_SKIA=true
 
+flutter build web --release --dart-define=FLUTTER_WEB_USE_EXPERIMENTAL_CANVAS_TEXT=true
+
 > 如使用--dart-define=FLUTTER_WEB_USE_SKIA=true可以提高性能，但中文会乱码
+> --dart-define=FLUTTER_WEB_USE_EXPERIMENTAL_CANVAS_TEXT=true 可以提高性能，不会中文会乱码
 
 # macos可执行文件
 
