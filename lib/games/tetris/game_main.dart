@@ -18,7 +18,12 @@ class MyGameSubClass extends BaseGame with TapDetector,PanDetector{
   Offset relativePoint;
   double mWidth=15; //方块宽度
   double left=60,top=80; //画布距离屏幕顶部的边距
+  var bgPaint = Paint()
+    ..isAntiAlias = true //抗锯齿
+    ..style = PaintingStyle.fill //填充
+    ..color = Color(0xFF56B2FF); //背景为纸黄色
   MyGameSubClass(TetrisWidgetState tetrisHome){
+
     this.tetrisHome=tetrisHome;
     TexturepackerLoader.fromJSONAtlas('ui.png', 'ui.json')
         .then((sprites) {
@@ -65,6 +70,19 @@ class MyGameSubClass extends BaseGame with TapDetector,PanDetector{
   }
   @override
   void render(Canvas canvas) {
+    //绘制背景
+    bgPaint.shader = LinearGradient(
+      begin: Alignment.topRight,
+      end: Alignment.bottomLeft,
+      //colors: <Color>[Color(0xFFFF4A84), Color(0xFFFFCC70), Color(0xFFC850C0), Color(0xFF4158D0)],
+      //stops: [0,.2,.9,1],
+      colors: <Color>[Color(0xFFFFDEE9), Color(0xFFB5FFFC)],
+      stops: [0,1],
+      tileMode: TileMode.mirror,
+    ).createShader(Rect.fromLTWH(0, 0, size.x, size.y));
+    canvas.drawRect(
+    Rect.fromLTWH(0, 0, size.x, size.y),
+    bgPaint);
     //设置画笔，画棋盘背景
     if(tetrisHome.gameStatus!=null){
       if(tetrisHome.gameStatus.playerInfo!=null&&sprites!=null){
@@ -87,11 +105,11 @@ class MyGameSubClass extends BaseGame with TapDetector,PanDetector{
             if(spr!=null){
               Paint paint = BasicPalette.white.paint;
               paint.color = new Color.fromARGB(255, 255, 255, 255);
-              sprites[sp].render(canvas, position: Vector2(size.x-left,
+              sprites[sp].render(canvas, position: Vector2(size.x-left-24,
                   top),
                   size: Vector2.all(24),overridePaint: paint);
               _textconfig.render(canvas, playerInfo.nickName+"("+playerInfo.score.toString()+")",
-                  Vector2(size.x-left-65, top), anchor: Anchor.topCenter);
+                  Vector2(size.x-left-65-24, top), anchor: Anchor.topCenter);
             }
           }
         });
@@ -107,23 +125,16 @@ class MyGameSubClass extends BaseGame with TapDetector,PanDetector{
     S2C_GridBroadcast s2c=tetrisHome.gameData;
     double chessboard_width=size.x-left*2;
 
-    //canvas.drawColor(CupertinoColors.systemGrey, BlendMode.colorBurn);//重绘下整个界面的画布背景颜色
     double mWidth = chessboard_rect.width / s2c.width.toInt();
     double mHeight = mWidth;
     this.mWidth=mWidth;
     chessboard_rect = Rect.fromLTWH(left, top+30, chessboard_width, mWidth*s2c.height.toInt());
+    //画棋盘网格
     var mPaint = Paint()
       ..isAntiAlias = true //抗锯齿
-      ..style = PaintingStyle.fill //填充
-      ..color = Color(0xEEFFFFFF); //背景为纸黄色
-    canvas.drawRect(
-        chessboard_rect,
-        mPaint);
-    //画棋盘网格
-    mPaint
       ..style = PaintingStyle.stroke
-      ..color = Colors.green[600]
-      ..strokeWidth = 4.0;
+      ..color = Color(0xFFB721FF)
+      ..strokeWidth = 1;
     canvas.drawRect(chessboard_rect, mPaint);
 //    for (var i = 0; i <= s2c.height.toInt(); i++) {
 //      //画横线
@@ -165,5 +176,5 @@ class MyGameSubClass extends BaseGame with TapDetector,PanDetector{
     // TODO: implement update
   }
 
-  Color backgroundColor() => const Color(0x00FFFFFF);
+  Color backgroundColor() => const Color(0xFFC94CE4);
 }
